@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arcium Blind Auctions</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Arcium RTG Developer Submission</p>
+        <h1>Blind Auctions with encrypted sealed bids</h1>
+        <p class="lede">Bidders submit encrypted values. Arcium computes the winner and settlement price after close, revealing only the result needed for escrow settlement.</p>
+      </section>
+      <section class="grid">
+        <article>
+          <h2>Modes</h2>
+          <p>First-price, Vickrey, and fixed-size uniform auctions share the same private bid flow.</p>
+        </article>
+        <article>
+          <h2>Private Inputs</h2>
+          <p>Bid amount, valuation, and quantity stay encrypted during the live auction window.</p>
+        </article>
+        <article>
+          <h2>Public Outputs</h2>
+          <p>Winner, clearing price, claim amounts, refunds, and escrow settlement are published on-chain.</p>
+        </article>
+      </section>
+      <section class="panel">
+        <h2>Demo Flow</h2>
+        <ol>
+          <li>Create an auction and escrow the asset.</li>
+          <li>Submit encrypted bids through the Arcium client.</li>
+          <li>Close the auction and wait for the verified Arcium callback.</li>
+          <li>Claim, refund, or withdraw according to the final settlement.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
