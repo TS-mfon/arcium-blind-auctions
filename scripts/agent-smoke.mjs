@@ -5,11 +5,30 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const rootDir = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  ".."
+);
 const html = readFileSync(path.join(rootDir, "app", "index.html"), "utf8");
-const appJs = readFileSync(path.join(rootDir, "app", "app.js"), "utf8");
+const createAuctionHtml = readFileSync(
+  path.join(rootDir, "app", "pages", "create-auction.html"),
+  "utf8"
+);
+const submitBidHtml = readFileSync(
+  path.join(rootDir, "app", "pages", "submit-bid.html"),
+  "utf8"
+);
+const closeAuctionHtml = readFileSync(
+  path.join(rootDir, "app", "pages", "close-auction.html"),
+  "utf8"
+);
+const howItWorksHtml = readFileSync(
+  path.join(rootDir, "app", "how-it-works.html"),
+  "utf8"
+);
+const walletJs = readFileSync(path.join(rootDir, "app", "wallet.js"), "utf8");
 const packageJson = JSON.parse(
-  readFileSync(path.join(rootDir, "package.json"), "utf8"),
+  readFileSync(path.join(rootDir, "package.json"), "utf8")
 );
 
 const agents = Object.freeze([
@@ -66,26 +85,16 @@ const agents = Object.freeze([
 
 const uiModel = Object.freeze({
   title: "Arcium Blind Auctions",
-  modes: [
-    "First-price sealed bid",
-    "Vickrey second price",
-    "Uniform price, fixed supply",
+  pages: [
+    "/app/pages/create-auction.html",
+    "/app/pages/submit-bid.html",
+    "/app/pages/close-auction.html",
+    "/app/how-it-works.html",
   ],
-  privateInputs: [
-    "Bidder label",
-    "Bidder public key",
-    "Bid amount",
-    "Quantity",
-    "Commitment nonce",
-  ],
-  publicOutputs: [
-    "Auction state",
-    "Settlement result",
-    "Sealed bids",
-    "Commitment",
-    "Status",
-  ],
-  stateFields: ["Name", "Mode", "Reserve", "Supply", "Ends"],
+  createFields: ["Auction title", "Asset", "Mode", "Reserve", "Seller wallet"],
+  bidFields: ["Auction account", "Bid amount", "Quantity", "Private nonce"],
+  closeFields: ["Auction account", "Expected bidder count", "Closer wallet"],
+  verifiedOutputs: ["Wallet", "Program", "Deploy tx"],
 });
 
 const checks = [];
@@ -107,30 +116,6 @@ function htmlText() {
   return normalized(html.replace(/<[^>]+>/g, " ")).toLowerCase();
 }
 
-function extractOrderedListItems(source) {
-  return [...source.matchAll(/<li>(.*?)<\/li>/gis)].map((match) =>
-    normalized(match[1].replace(/<[^>]+>/g, " ")),
-  );
-}
-
-function extractSelectOptions(source, selectId) {
-  const select = source.match(
-    new RegExp(
-      `<select[^>]+id="${selectId}"[^>]*>([\\s\\S]*?)<\\/select>`,
-      "i",
-    ),
-  );
-  assert.ok(select, `missing select: ${selectId}`);
-  return [
-    ...select[1].matchAll(
-      /<option[^>]+value="([^"]+)"[^>]*>(.*?)<\/option>/gis,
-    ),
-  ].map((match) => ({
-      value: match[1],
-      label: normalized(match[2].replace(/<[^>]+>/g, " ")),
-    }));
-}
-
 function hasLabel(source, text) {
   return source.toLowerCase().includes(text.toLowerCase());
 }
@@ -149,11 +134,11 @@ function buildActionLog(actorSpecs) {
       payload: Object.freeze(
         Object.fromEntries(
           Object.entries(agent).filter(
-            ([key]) => !["id", "role", "action"].includes(key),
-          ),
-        ),
+            ([key]) => !["id", "role", "action"].includes(key)
+          )
+        )
       ),
-    }),
+    })
   );
 }
 
@@ -183,12 +168,12 @@ function reduceAuction(events) {
         assert.equal(
           state.auction.status,
           "open",
-          "bidding requires open auction",
+          "bidding requires open auction"
         );
         assert.ok(event.payload.bid >= 0, "bid must be non-negative");
         assert.ok(
           event.payload.valuation >= event.payload.bid,
-          "valuation covers bid",
+          "valuation covers bid"
         );
         return {
           ...state,
@@ -205,11 +190,11 @@ function reduceAuction(events) {
         assert.ok(
           new Date(event.payload.observedAt).getTime() >=
             new Date(state.auction.endsAt).getTime(),
-          "settlement requires closed auction window",
+          "settlement requires closed auction window"
         );
 
         const ranked = [...state.bids].sort(
-          (a, b) => b.bid - a.bid || a.bidder.localeCompare(b.bidder),
+          (a, b) => b.bid - a.bid || a.bidder.localeCompare(b.bidder)
         );
         const winner = ranked[0];
         const runnerUp = ranked[1];
@@ -217,7 +202,7 @@ function reduceAuction(events) {
           winner && winner.bid >= state.auction.reserve
             ? Math.max(
                 state.auction.reserve,
-                runnerUp?.bid ?? state.auction.reserve,
+                runnerUp?.bid ?? state.auction.reserve
               )
             : null;
 
@@ -242,7 +227,7 @@ function reduceAuction(events) {
 
       throw new Error(`unknown action: ${event.action}`);
     },
-    { auction: null, bids: [], settlement: null },
+    { auction: null, bids: [], settlement: null }
   );
 }
 
@@ -267,11 +252,11 @@ check("defines deterministic seller, bidder, and liquidator agents", () => {
   assert.equal(agents.filter((agent) => agent.role === "seller").length, 1);
   assert.equal(
     agents.filter((agent) => agent.role === "bidder").length >= 3,
-    true,
+    true
   );
   assert.equal(
     agents.filter((agent) => agent.role === "liquidator").length >= 1,
-    true,
+    true
   );
   assert.deepEqual(
     agents.map((agent) => agent.id),
@@ -283,38 +268,40 @@ check("defines deterministic seller, bidder, and liquidator agents", () => {
       "bidder-eris",
       "liquidator-mira",
     ],
-    "agent ordering must follow the fixed auction journey",
+    "agent ordering must follow the fixed auction journey"
   );
 });
 
-check("validates UI data model from app/index.html", () => {
-  const text = htmlText();
+check("validates routed wallet-enabled UI model", () => {
+  const text = normalized(
+    [html, createAuctionHtml, submitBidHtml, closeAuctionHtml, howItWorksHtml]
+      .join(" ")
+      .replace(/<[^>]+>/g, " ")
+  ).toLowerCase();
   assert.ok(html.includes(`<title>${uiModel.title}</title>`));
 
-  assert.deepEqual(extractSelectOptions(html, "auction-mode"), [
-    { value: "first-price", label: "First-price sealed bid" },
-    { value: "vickrey", label: "Vickrey second price" },
-    { value: "uniform", label: "Uniform price, fixed supply" },
-  ]);
+  for (const expected of uiModel.pages) {
+    assert.ok(html.includes(expected), `missing route link: ${expected}`);
+  }
 
   for (const expected of [
-    ...uiModel.modes,
-    ...uiModel.privateInputs,
-    ...uiModel.publicOutputs,
-    ...uiModel.stateFields,
+    ...uiModel.createFields,
+    ...uiModel.bidFields,
+    ...uiModel.closeFields,
+    ...uiModel.verifiedOutputs,
   ]) {
     assert.ok(
       text.includes(expected.toLowerCase()),
-      `missing UI model term: ${expected}`,
+      `missing UI model term: ${expected}`
     );
   }
 
-  assert.deepEqual(extractOrderedListItems(html), []);
-  assert.ok(
-    hasLabel(appJs, "const state = {\n  auction: null,\n  bids: [],\n  closed: false"),
-  );
-  assert.ok(hasLabel(appJs, "Clearing price:"));
-  assert.ok(hasLabel(appJs, "No winner"));
+  assert.ok(hasLabel(html, "data-wallet-connect"));
+  assert.ok(hasLabel(createAuctionHtml, "data-wallet-connect"));
+  assert.ok(hasLabel(submitBidHtml, "data-wallet-connect"));
+  assert.ok(hasLabel(closeAuctionHtml, "data-wallet-connect"));
+  assert.ok(hasLabel(walletJs, "getAccountInfo"));
+  assert.ok(hasLabel(walletJs, "No verified contract metadata"));
 });
 
 check("derives auction state only from the deterministic action log", () => {
@@ -332,7 +319,7 @@ check("derives auction state only from the deterministic action log", () => {
 check("keeps bid intent private before settlement output", () => {
   const actionLog = buildActionLog(agents);
   const preSettlement = actionLog.filter(
-    (event) => event.action !== "settle-after-close",
+    (event) => event.action !== "settle-after-close"
   );
   const publicTranscript = preSettlement.map((event) => ({
     seq: event.seq,

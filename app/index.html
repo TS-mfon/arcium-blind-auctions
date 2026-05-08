@@ -1,292 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Interactive Arcium blind auction flow with local sealed-bid inputs and deployment verification details."
-    />
+    <meta name="description" content="Arcium blind auctions with wallet connection, separate action pages, and explorer-verifiable deployment data." />
     <title>Arcium Blind Auctions</title>
     <link rel="icon" type="image/svg+xml" href="/app/favicon.svg" />
-    <link rel="stylesheet" href="/app/styles.css" />
-    <script src="/app/app.js" defer></script>
+    <link rel="stylesheet" href="/app/site.css" />
+    <script src="/app/wallet.js" defer></script>
   </head>
   <body>
-    <main class="app-shell">
-      <header class="topbar" aria-label="Application header">
-        <div>
-          <p class="eyebrow">Arcium Blind Auctions</p>
-          <h1>Run a sealed-bid auction flow</h1>
+    <main class="shell">
+      <nav class="nav">
+        <a class="brand" href="/app"><span class="brand-mark">A</span><span>Arcium Blind Auctions</span></a>
+        <div class="links">
+          <a href="/app/how-it-works.html">How it works</a>
+          <a href="/app/pages/create-auction.html">Create</a>
+          <a href="/app/pages/submit-bid.html">Bid</a>
+          <button class="wallet-button" data-wallet-connect>Connect wallet</button>
         </div>
-        <div class="status-pill" id="auction-status">No auction</div>
-      </header>
-
-      <section class="workspace" aria-label="Auction workspace">
-        <div class="flow-column">
-          <section class="panel setup-panel" aria-labelledby="setup-title">
-            <div class="panel-heading">
-              <div>
-                <p class="step-label">Step 1</p>
-                <h2 id="setup-title">Create auction</h2>
-              </div>
-              <button class="ghost-button" type="button" id="reset-auction">
-                Reset
-              </button>
-            </div>
-
-            <form id="auction-form" class="form-grid">
-              <label>
-                Auction name
-                <input
-                  id="auction-name"
-                  name="auctionName"
-                  type="text"
-                  autocomplete="off"
-                  required
-                  placeholder="Treasury NFT sale"
-                />
-              </label>
-
-              <label>
-                Asset or lot
-                <input
-                  id="auction-asset"
-                  name="auctionAsset"
-                  type="text"
-                  autocomplete="off"
-                  required
-                  placeholder="1 of 1 encrypted lot"
-                />
-              </label>
-
-              <label>
-                Auction mode
-                <select id="auction-mode" name="auctionMode">
-                  <option value="first-price">First-price sealed bid</option>
-                  <option value="vickrey">Vickrey second price</option>
-                  <option value="uniform">Uniform price, fixed supply</option>
-                </select>
-              </label>
-
-              <label>
-                Supply
-                <input
-                  id="auction-supply"
-                  name="auctionSupply"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value="1"
-                  required
-                />
-              </label>
-
-              <label>
-                Reserve price
-                <input
-                  id="reserve-price"
-                  name="reservePrice"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value="0"
-                  required
-                />
-              </label>
-
-              <label>
-                Ends at
-                <input
-                  id="auction-end"
-                  name="auctionEnd"
-                  type="datetime-local"
-                  required
-                />
-              </label>
-
-              <div class="form-actions">
-                <button type="submit">Open bidding</button>
-              </div>
-            </form>
-          </section>
-
-          <section class="panel bid-panel" aria-labelledby="bid-title">
-            <div class="panel-heading">
-              <div>
-                <p class="step-label">Step 2</p>
-                <h2 id="bid-title">Submit sealed bid</h2>
-              </div>
-              <span class="muted" id="bid-count">0 bids</span>
-            </div>
-
-            <form id="bid-form" class="form-grid">
-              <label>
-                Bidder label
-                <input
-                  id="bidder-name"
-                  name="bidderName"
-                  type="text"
-                  autocomplete="off"
-                  required
-                  placeholder="Bidder A"
-                />
-              </label>
-
-              <label>
-                Bidder public key
-                <input
-                  id="bidder-key"
-                  name="bidderKey"
-                  type="text"
-                  autocomplete="off"
-                  required
-                  placeholder="Solana address"
-                />
-              </label>
-
-              <label>
-                Bid amount
-                <input
-                  id="bid-amount"
-                  name="bidAmount"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  required
-                />
-              </label>
-
-              <label>
-                Quantity
-                <input
-                  id="bid-quantity"
-                  name="bidQuantity"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value="1"
-                  required
-                />
-              </label>
-
-              <label class="wide">
-                Commitment nonce
-                <input
-                  id="bid-nonce"
-                  name="bidNonce"
-                  type="text"
-                  autocomplete="off"
-                  required
-                  placeholder="Private salt used for the local bid commitment"
-                />
-              </label>
-
-              <div class="form-actions">
-                <button type="submit">Seal bid</button>
-              </div>
-            </form>
-          </section>
+      </nav>
+      <section class="hero">
+        <p class="eyebrow">Confidential price discovery on Solana</p>
+        <h1>Sealed bids, Arcium computation, public settlement.</h1>
+        <p class="lede">A production-facing auction interface where every action has its own page, wallet connection is first-class, and deployment data links back to Solana Explorer.</p>
+        <div class="cta-row">
+          <a class="primary" href="/app/pages/create-auction.html">Create auction</a>
+          <a class="secondary primary" href="/app/how-it-works.html">See how it works</a>
         </div>
-
-        <aside class="side-column">
-          <section class="panel summary-panel" aria-labelledby="summary-title">
-            <div class="panel-heading">
-              <div>
-                <p class="step-label">Live state</p>
-                <h2 id="summary-title">Auction state</h2>
-              </div>
-              <button
-                class="ghost-button"
-                type="button"
-                id="close-auction"
-                disabled
-              >
-                Close
-              </button>
-            </div>
-
-            <dl class="state-list">
-              <div>
-                <dt>Name</dt>
-                <dd id="state-name">Not created</dd>
-              </div>
-              <div>
-                <dt>Mode</dt>
-                <dd id="state-mode">-</dd>
-              </div>
-              <div>
-                <dt>Reserve</dt>
-                <dd id="state-reserve">-</dd>
-              </div>
-              <div>
-                <dt>Supply</dt>
-                <dd id="state-supply">-</dd>
-              </div>
-              <div>
-                <dt>Ends</dt>
-                <dd id="state-end">-</dd>
-              </div>
-            </dl>
-
-            <div class="result-box" id="result-box">
-              <p class="muted">
-                Create an auction and submit bids to preview the settlement
-                result.
-              </p>
-            </div>
-          </section>
-
-          <section
-            class="panel verified-panel"
-            aria-labelledby="verified-title"
-          >
-            <div class="panel-heading">
-              <div>
-                <p class="step-label">Verified state</p>
-                <h2 id="verified-title">Deployment</h2>
-              </div>
-              <span
-                class="status-dot"
-                id="deployment-dot"
-                aria-hidden="true"
-              ></span>
-            </div>
-            <div id="deployment-state" class="deployment-state">
-              <p class="muted">Checking for app/deployment.json...</p>
-            </div>
-          </section>
-        </aside>
       </section>
-
-      <section class="panel bids-panel" aria-labelledby="sealed-bids-title">
-        <div class="panel-heading">
-          <div>
-            <p class="step-label">Step 3</p>
-            <h2 id="sealed-bids-title">Sealed bids</h2>
-          </div>
-          <span class="muted"
-            >Amounts stay hidden until this local flow is closed.</span
-          >
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Bidder</th>
-                <th>Public key</th>
-                <th>Quantity</th>
-                <th>Commitment</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="bid-table">
-              <tr>
-                <td colspan="5" class="empty-row">No sealed bids yet.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <section class="grid">
+        <a class="card" href="/app/pages/create-auction.html"><h2>Create Auction</h2><p>Configure mode, reserve, and asset without mixing bidder actions on the same page.</p></a>
+        <a class="card" href="/app/pages/submit-bid.html"><h2>Submit Sealed Bid</h2><p>Connect wallet and prepare private bid inputs for Arcium computation.</p></a>
+        <a class="card" href="/app/pages/close-auction.html"><h2>Close Auction</h2><p>Finalize after encrypted computation and verify the deployed program on explorer.</p></a>
+      </section>
+      <section class="panel" style="margin-top:18px">
+        <h2>Verified deployment</h2>
+        <dl class="kv">
+          <div><dt>Status</dt><dd data-deployment-status>Checking...</dd></div>
+          <div><dt>Program</dt><dd data-program-id>Checking...</dd></div>
+          <div><dt>Deploy tx</dt><dd data-deploy-tx>Checking...</dd></div>
+        </dl>
+        <p data-program-verified>Checking program account...</p>
       </section>
     </main>
   </body>

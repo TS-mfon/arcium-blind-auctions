@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>How Arcium Blind Auctions Work</title>
+    <link rel="icon" href="/app/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/app/site.css" />
+    <script src="/app/wallet.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="nav"><a class="brand" href="/app"><span class="brand-mark">A</span><span>Blind Auctions</span></a><div class="links"><a href="/app/pages/create-auction.html">Create</a><a href="/app/pages/submit-bid.html">Bid</a><button class="wallet-button" data-wallet-connect>Connect wallet</button></div></nav>
+      <section class="hero">
+        <p class="eyebrow">How it works</p>
+        <h1>Sealed bids enter encrypted computation before settlement is public.</h1>
+        <p class="lede">Arcium lets the app queue confidential computation from Solana. Bids are encrypted client-side, the MPC network computes the result, and the callback publishes only the verified settlement output.</p>
+      </section>
+      <section class="grid">
+        <article class="card"><h2>1. Connect</h2><p>The wallet signs Solana actions and gives the dapp a public key. The app never asks for private keys.</p></article>
+        <article class="card"><h2>2. Encrypt</h2><p>Bid values are converted into encrypted inputs for Arcium instead of being stored as public plaintext.</p></article>
+        <article class="card"><h2>3. Verify</h2><p>The deployed program and transactions are linked to Solana Explorer for independent verification.</p></article>
+      </section>
+    </main>
+  </body>
+</html>
