@@ -3,14 +3,17 @@
 An Arcium RTG developer submission for sealed-bid auctions on Solana.
 
 ## What It Builds
+
 This repo contains an Arcium/Anchor project for encrypted auction computation. Bidders encrypt bid values client-side; the Solana program queues an Arcium computation; Arcium nodes compute the auction result over encrypted shares; the callback reveals only the winner and settlement value needed for escrow settlement.
 
-The current generated circuit is the buildable Arcium integration base. The auction domain layer is documented in `PRIVACY.md`, `DEPLOYMENT.md`, and the Vercel demo in `app/`.
+The current generated circuit is the buildable Arcium integration base. The auction domain layer is documented in `PRIVACY.md`, `DEPLOYMENT.md`, and the interactive Vercel frontend in `app/`.
 
 ## Privacy Benefit
+
 Blind auctions stop bidders, searchers, and market makers from reacting to live bid values before the auction closes. This reduces collusion, MEV leakage, and copy-bidding.
 
 ## Arcium Flow
+
 1. Client derives an x25519 shared secret with the MXE public key.
 2. Client encrypts bid inputs with `@arcium-hq/client`.
 3. Program queues the encrypted computation.
@@ -26,7 +29,8 @@ arcium test
 ```
 
 ## RTG Notes
+
 - Functional Solana/Arcium project scaffolded with `arcium init`.
 - Open-source repo ready.
 - English explanation included.
-- Frontend demo included under `app/`.
+- Interactive auction frontend included under `app/`, with a verified deployment panel that reads optional `app/deployment.json` metadata.

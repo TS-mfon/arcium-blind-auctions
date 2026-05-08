@@ -54,7 +54,10 @@ describe("ArciumBlindAuctions", () => {
   const clusterAccount = getClusterAccAddress(arciumEnv.arciumClusterOffset);
 
   it("Is initialized!", async () => {
-    const owner = readKpJson(`${os.homedir()}/.config/solana/id.json`);
+    const owner = readKpJson(
+      process.env.ANCHOR_WALLET ??
+        `${os.homedir()}/.config/solana/arcium-rtg-deployer.json`,
+    );
 
     console.log("Initializing add together computation definition");
     const initATSig = await initAddTogetherCompDef(program, owner);

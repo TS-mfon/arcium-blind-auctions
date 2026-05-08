@@ -1,0 +1,18 @@
+{
+  "status": "deployed",
+  "cluster": "devnet",
+  "programId": "7yCwxegCFzv1JU47HQ6FKfMQqXBhVS3udi6GVjGN6Sq7",
+  "deployer": "EndmNqbPbyH9PbGFvwHFmB3xFh7D773tK5jC36ef6CD",
+  "programDeploySignature": "5EBa1iqpPStFKWGoc5veRZaTAJdRVabVDF6613F7zv2Y3DLUPw1sgeDCzFjpyQvsN5HRdjh6qwGv6ddFoZbXsQ4h",
+  "mxeInitSignature": "2uU46T41ZttWbekUwLcD4VfQzWAswhHtUXa56ipsMEA7LEoaLskapDvQeoCbKNUESfvjq8SpyjjQvDfqYVome4bg",
+  "keyRecoverySignature": "5EUJnqZfJWMRghofDrhdRpdrpTWJUM1j2HB6oxWj9pFeSR4C9c712ywKdJbKfa8gUBLKFQQgo2sGz2RogTBzP3CA",
+  "compDefInitSignature": "46vbhoLBvbg2Fp1PYVMY8qnGg5yaV3YD3H9Tx8nhMhEN3kDUjYyyybGUy4PdwvweSHCbsBcCgE5tsN8evT3oynNE",
+  "compDefAccount": "GGt91aSVL1jU4u1jeTpb9y5F7znwcfcCgH5LZik9EjNT",
+  "rentClaimSignatures": [
+    "2dAphwciMqyHpePHuevK38pK1qQrXqbmJ5QU4HNgK7okkvNtcoK8hJZRZUfHwK5GXvZ2s5BhofY4FHUaTH8wYKuR",
+    "25hSiaXJPVSd9ucnn9oVxzq2dVTWFmU77sZ5VTPRE9HuVbDhdCUQGD9Q6TvQswBvVqv1mngVUCBDCV64iWdi3zXM"
+  ],
+  "explorerBase": "https://explorer.solana.com",
+  "arciumInstruction": "add_together",
+  "note": "Current deployed program is the generated Arcium encrypted computation base. It exposes init_add_together_comp_def, add_together, and add_together_callback. Devnet circuit upload hit public RPC 429 rate limits after computation definition initialization."
+}
