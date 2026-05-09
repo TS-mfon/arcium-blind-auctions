@@ -1,24 +1,39 @@
 # Arcium Blind Auctions
 
-An Arcium RTG developer submission for sealed-bid auctions on Solana.
+Sealed-bid auction dapp for Solana and Arcium. The app gives sellers separate pages to create auction terms, bidders a page to submit confidential bids, and closers a page to request settlement.
 
-## What It Builds
+## Live Status
 
-This repo contains an Arcium/Anchor project for encrypted auction computation. Bidders encrypt bid values client-side; the Solana program queues an Arcium computation; Arcium nodes compute the auction result over encrypted shares; the callback reveals only the winner and settlement value needed for escrow settlement.
+- Network: Solana devnet
+- Program: `7yCwxegCFzv1JU47HQ6FKfMQqXBhVS3udi6GVjGN6Sq7`
+- Frontend: https://arciumblindauctions.vercel.app
 
-The current generated circuit is the buildable Arcium integration base. The auction domain layer is documented in `PRIVACY.md`, `DEPLOYMENT.md`, and the interactive Vercel frontend in `app/`.
+## Fuller Dapp Flow
 
-## Privacy Benefit
+1. Connect a Solana wallet.
+2. Create auction terms.
+3. Submit sealed bids from bidder wallets.
+4. Close the auction after the bidding window.
+5. Review the private workspace for local bid drafts and explorer-confirmed receipts.
 
-Blind auctions stop bidders, searchers, and market makers from reacting to live bid values before the auction closes. This reduces collusion, MEV leakage, and copy-bidding.
+Every form sends a real wallet-signed transaction to the deployed program. The UI keeps the private draft in browser local storage and links it to the transaction signature so the user can verify the action on Solana Explorer without exposing private bid data.
 
-## Arcium Flow
+## How Arcium Is Used
 
-1. Client derives an x25519 shared secret with the MXE public key.
-2. Client encrypts bid inputs with `@arcium-hq/client`.
-3. Program queues the encrypted computation.
-4. Arcium finalizes the computation.
-5. Callback verifies signed output and emits the final settlement event.
+Arcium is the confidential-computation layer for evaluating private auction inputs. The design keeps public auction terms on Solana while treating bid values, bidder strategy, and nonce data as private inputs for Arcium-style computation.
+
+The MVP program records explorer-verifiable action receipts. The privacy layer is structured so future Arcium computation can evaluate sealed-bid, Vickrey, or uniform-price settlement without publishing every bid.
+
+## Privacy Benefits
+
+- Bid amounts do not need to be readable public state.
+- Bidders cannot copy or react to other bidders' private values before close.
+- Losing bid details can remain private.
+- Settlement can reveal only the winner and required clearing value.
+
+## Local Versus On-Chain Data
+
+The transaction receipt is on-chain. The raw bid draft shown in the private workspace is local to the browser and wallet. Clearing browser storage removes the local draft but does not remove the Solana transaction.
 
 ## Commands
 
@@ -27,10 +42,3 @@ yarn install
 arcium build
 arcium test
 ```
-
-## RTG Notes
-
-- Functional Solana/Arcium project scaffolded with `arcium init`.
-- Open-source repo ready.
-- English explanation included.
-- Interactive auction frontend included under `app/`, with a verified deployment panel that reads optional `app/deployment.json` metadata.
