@@ -1,4 +1,27 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Close Auction</title><link rel="icon" href="/app/favicon.svg" type="image/svg+xml"/><link rel="stylesheet" href="/app/site.css"/><script src="/app/wallet.js" defer></script></head>
-<body><main class="shell"><nav class="nav"><a class="brand" href="/app"><span class="brand-mark">C</span><span>Close Auction</span></a><div class="links"><a href="/app/how-it-works.html">How it works</a><button class="wallet-button" data-wallet-connect>Connect wallet</button></div></nav>
-<section class="layout"><form class="panel form-grid"><label>Auction account<input placeholder="Auction PDA or account"/></label><label>Expected bidder count<input type="number" min="0"/></label><label class="wide">Closer wallet<output data-wallet-full>Connect wallet to use your address</output></label><button class="wide" type="button" data-wallet-connect>Connect wallet to close after encrypted computation</button></form><aside class="panel"><h2>Settlement</h2><p>The real close flow must wait for Arcium finalization and then publish winner/price via verified callback. No fake winner is displayed here.</p><dl class="kv"><div><dt>Program</dt><dd data-program-id>Checking...</dd></div></dl></aside></section></main></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Close Auction</title>
+    <link rel="icon" href="/app/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/app/site.css" />
+    <script src="/app/wallet.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar"><a class="brand" href="/app"><span class="brand-mark">C</span><span>Close Auction</span></a><nav class="nav-links"><a href="/app/pages/create-auction.html">Create</a><a href="/app/pages/submit-bid.html">Bid</a><button class="wallet-trigger" type="button" data-wallet-connect>Connect wallet</button></nav></header>
+      <section class="page-head"><p class="eyebrow">Function 03</p><h1>Close and settle the auction.</h1><p class="lede">After the close time, the settlement path reveals the winner and clearing price without exposing losing bids.</p></section>
+      <section class="layout">
+        <form class="panel form-grid" data-action-form="Close auction">
+          <label class="wide">Auction account<input required placeholder="Auction PDA or account" /></label>
+          <label>Expected bid count<input type="number" min="0" /></label>
+          <label>Settlement mode<select><option>Finalize encrypted computation</option><option>Refresh result account</option></select></label>
+          <label class="wide">Closer wallet<output data-wallet-full>Connect a wallet to continue</output></label>
+          <div class="page-actions wide"><button class="action" type="submit" data-submit-action>Close auction</button><span data-wallet-state class="status-pill warn">Wallet required</span></div>
+        </form>
+        <aside class="panel proof-panel"><p class="eyebrow">Settlement</p><h2>No fake winners</h2><p>Results appear only from verified computation callback data.</p><button class="proof-toggle" type="button" data-proof-toggle>Show technical details</button><div class="proof-body"><dl class="kv"><div><dt>Status</dt><dd data-contract-state>Checking</dd></div><div><dt>Program</dt><dd data-program-id>Checking</dd></div></dl></div><div class="activity" data-activity></div></aside>
+      </section>
+    </main>
+  </body>
+</html>

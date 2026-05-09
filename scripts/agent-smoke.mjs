@@ -93,7 +93,7 @@ const uiModel = Object.freeze({
   ],
   createFields: ["Auction title", "Asset", "Mode", "Reserve", "Seller wallet"],
   bidFields: ["Auction account", "Bid amount", "Quantity", "Private nonce"],
-  closeFields: ["Auction account", "Expected bidder count", "Closer wallet"],
+  closeFields: ["Auction account", "Expected bid count", "Closer wallet"],
   verifiedOutputs: ["Wallet", "Program", "Deploy tx"],
 });
 
@@ -300,8 +300,11 @@ check("validates routed wallet-enabled UI model", () => {
   assert.ok(hasLabel(createAuctionHtml, "data-wallet-connect"));
   assert.ok(hasLabel(submitBidHtml, "data-wallet-connect"));
   assert.ok(hasLabel(closeAuctionHtml, "data-wallet-connect"));
-  assert.ok(hasLabel(walletJs, "getAccountInfo"));
-  assert.ok(hasLabel(walletJs, "No verified contract metadata"));
+  assert.ok(hasLabel(walletJs, "Choose a wallet"));
+  assert.ok(hasLabel(walletJs, "Phantom"));
+  assert.ok(hasLabel(walletJs, "Solflare"));
+  assert.ok(hasLabel(walletJs, "Backpack"));
+  assert.ok(hasLabel(walletJs, "Contract deployment required"));
 });
 
 check("derives auction state only from the deterministic action log", () => {

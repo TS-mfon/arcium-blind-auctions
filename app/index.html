@@ -3,45 +3,54 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Arcium blind auctions with wallet connection, separate action pages, and explorer-verifiable deployment data." />
+    <meta name="description" content="Private sealed-bid auctions on Arcium." />
     <title>Arcium Blind Auctions</title>
-    <link rel="icon" type="image/svg+xml" href="/app/favicon.svg" />
+    <link rel="icon" href="/app/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/app/site.css" />
     <script src="/app/wallet.js" defer></script>
   </head>
   <body>
     <main class="shell">
-      <nav class="nav">
-        <a class="brand" href="/app"><span class="brand-mark">A</span><span>Arcium Blind Auctions</span></a>
-        <div class="links">
+      <header class="topbar">
+        <a class="brand" href="/app"><span class="brand-mark">A</span><span>Blind Auctions</span></a>
+        <nav class="nav-links" aria-label="Primary">
           <a href="/app/how-it-works.html">How it works</a>
           <a href="/app/pages/create-auction.html">Create</a>
           <a href="/app/pages/submit-bid.html">Bid</a>
-          <button class="wallet-button" data-wallet-connect>Connect wallet</button>
-        </div>
-      </nav>
+          <a href="/app/pages/close-auction.html">Close</a>
+          <button class="wallet-trigger" type="button" data-wallet-connect>Connect wallet</button>
+        </nav>
+      </header>
+
       <section class="hero">
-        <p class="eyebrow">Confidential price discovery on Solana</p>
-        <h1>Sealed bids, Arcium computation, public settlement.</h1>
-        <p class="lede">A production-facing auction interface where every action has its own page, wallet connection is first-class, and deployment data links back to Solana Explorer.</p>
-        <div class="cta-row">
-          <a class="primary" href="/app/pages/create-auction.html">Create auction</a>
-          <a class="secondary primary" href="/app/how-it-works.html">See how it works</a>
+        <div>
+          <p class="eyebrow">Encrypted price discovery</p>
+          <h1>Run sealed auctions without leaking bidder intent.</h1>
+          <p class="lede">
+            Bids stay private while Arcium computes the winning result. The app is built for real wallet
+            interaction, explorer-verifiable actions, and clear settlement flows.
+          </p>
+          <div class="cta-row">
+            <a class="primary" href="/app/pages/create-auction.html">Create auction</a>
+            <a class="secondary" href="/app/pages/submit-bid.html">Submit sealed bid</a>
+          </div>
         </div>
+        <aside class="panel hero-card">
+          <p class="eyebrow">Live readiness</p>
+          <h2>Private auction desk</h2>
+          <p>Connect a Solana wallet, create an auction, submit encrypted bid inputs, and close through an Arcium-backed settlement path.</p>
+          <div class="hero-card-grid">
+            <div class="stat"><strong>3</strong><span class="muted">Auction modes</span></div>
+            <div class="stat"><strong>MPC</strong><span class="muted">Private bid computation</span></div>
+            <div class="stat"><strong data-contract-state>Checking</strong><span class="muted">Devnet deployment state</span></div>
+          </div>
+        </aside>
       </section>
-      <section class="grid">
-        <a class="card" href="/app/pages/create-auction.html"><h2>Create Auction</h2><p>Configure mode, reserve, and asset without mixing bidder actions on the same page.</p></a>
-        <a class="card" href="/app/pages/submit-bid.html"><h2>Submit Sealed Bid</h2><p>Connect wallet and prepare private bid inputs for Arcium computation.</p></a>
-        <a class="card" href="/app/pages/close-auction.html"><h2>Close Auction</h2><p>Finalize after encrypted computation and verify the deployed program on explorer.</p></a>
-      </section>
-      <section class="panel" style="margin-top:18px">
-        <h2>Verified deployment</h2>
-        <dl class="kv">
-          <div><dt>Status</dt><dd data-deployment-status>Checking...</dd></div>
-          <div><dt>Program</dt><dd data-program-id>Checking...</dd></div>
-          <div><dt>Deploy tx</dt><dd data-deploy-tx>Checking...</dd></div>
-        </dl>
-        <p data-program-verified>Checking program account...</p>
+
+      <section class="grid" aria-label="Auction functions">
+        <a class="feature-card" href="/app/pages/create-auction.html"><span>01</span><h2>Create</h2><p>Define the asset, reserve, supply, mode, and close time.</p></a>
+        <a class="feature-card" href="/app/pages/submit-bid.html"><span>02</span><h2>Bid</h2><p>Prepare private bid inputs from a connected wallet.</p></a>
+        <a class="feature-card" href="/app/pages/close-auction.html"><span>03</span><h2>Settle</h2><p>Close the auction and reveal only the final settlement result.</p></a>
       </section>
     </main>
   </body>

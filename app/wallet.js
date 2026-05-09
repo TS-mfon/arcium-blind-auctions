@@ -1,128 +1,204 @@
+const CLUSTER = "devnet";
+const RPC_URL = "https://api.devnet.solana.com";
+const state = {
+  walletName: "",
+  publicKey: "",
+  deployment: null,
+};
+
 const short = (value) =>
-  value ? `${value.slice(0, 6)}...${value.slice(-6)}` : "Not connected";
+  value ? `${value.slice(0, 4)}...${value.slice(-4)}` : "Not connected";
 
-async function loadDeployment() {
-  try {
-    const response = await fetch("/app/deployment.json", { cache: "no-store" });
-    if (!response.ok) throw new Error("missing deployment metadata");
-    return await response.json();
-  } catch {
-    return null;
-  }
+const wallets = [
+  {
+    name: "Phantom",
+    install: "https://phantom.app/",
+    get provider() {
+      return window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+    },
+  },
+  {
+    name: "Solflare",
+    install: "https://solflare.com/",
+    get provider() {
+      return window.solflare || (window.solana?.isSolflare ? window.solana : null);
+    },
+  },
+  {
+    name: "Backpack",
+    install: "https://backpack.app/",
+    get provider() {
+      return window.backpack?.solana || (window.solana?.isBackpack ? window.solana : null);
+    },
+  },
+  {
+    name: "Detected wallet",
+    install: "https://solana.com/ecosystem/explore?categories=wallet",
+    get provider() {
+      return window.solana || null;
+    },
+  },
+];
+
+boot();
+
+function boot() {
+  injectWalletModal();
+  bindWalletButtons();
+  bindProofPanels();
+  bindDemoForms();
+  hydrateDeployment();
+  renderWallet();
 }
 
-function explorerAddress(address, cluster = "devnet") {
-  return `https://explorer.solana.com/address/${address}?cluster=${cluster}`;
-}
-
-function explorerTx(signature, cluster = "devnet") {
-  return `https://explorer.solana.com/tx/${signature}?cluster=${cluster}`;
-}
-
-async function verifyProgram(programId, cluster = "devnet") {
-  if (!programId) return { ok: false, reason: "No program id" };
-  const endpoint =
-    cluster === "mainnet-beta"
-      ? "https://api.mainnet-beta.solana.com"
-      : "https://api.devnet.solana.com";
-  const body = {
-    jsonrpc: "2.0",
-    id: 1,
-    method: "getAccountInfo",
-    params: [programId, { encoding: "base64" }],
-  };
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
+function injectWalletModal() {
+  if (document.querySelector("#wallet-modal")) return;
+  const modal = document.createElement("div");
+  modal.id = "wallet-modal";
+  modal.className = "wallet-modal";
+  modal.innerHTML = `
+    <section class="wallet-dialog" role="dialog" aria-modal="true" aria-labelledby="wallet-title">
+      <div class="status-row">
+        <div>
+          <p class="eyebrow">Solana wallet</p>
+          <h2 id="wallet-title">Choose a wallet</h2>
+        </div>
+        <button class="ghost" type="button" data-wallet-close>Close</button>
+      </div>
+      <p class="muted">Connect with an installed Solana wallet. The app never asks for seed phrases or private keys.</p>
+      <div data-wallet-options></div>
+    </section>`;
+  document.body.append(modal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal || event.target.closest("[data-wallet-close]")) {
+      modal.classList.remove("open");
+    }
   });
-  const json = await response.json();
-  return {
-    ok: Boolean(json.result?.value),
-    owner: json.result?.value?.owner || "",
-    lamports: json.result?.value?.lamports || 0,
-  };
 }
 
-async function connectWallet() {
-  const provider = window.solana;
-  if (!provider?.isPhantom && !provider?.connect) {
-    alert(
-      "Install Phantom or another Solana wallet that injects window.solana."
+function bindWalletButtons() {
+  document.querySelectorAll("[data-wallet-connect]").forEach((button) => {
+    button.addEventListener("click", openWalletModal);
+  });
+}
+
+function openWalletModal() {
+  const modal = document.querySelector("#wallet-modal");
+  const options = modal.querySelector("[data-wallet-options]");
+  options.replaceChildren();
+  for (const wallet of wallets) {
+    const installed = Boolean(wallet.provider);
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = "wallet-option";
+    option.innerHTML = `<strong>${wallet.name}</strong><small>${installed ? "Installed" : "Install"}</small>`;
+    option.addEventListener("click", () =>
+      installed ? connectWallet(wallet) : window.open(wallet.install, "_blank", "noreferrer")
     );
-    return;
+    options.append(option);
   }
-  const result = await provider.connect();
-  const pubkey = result.publicKey?.toString() || provider.publicKey?.toString();
-  document.querySelectorAll("[data-wallet-address]").forEach((node) => {
-    node.textContent = short(pubkey);
-    node.title = pubkey;
+  modal.classList.add("open");
+}
+
+async function connectWallet(wallet) {
+  try {
+    const provider = wallet.provider;
+    const response = await provider.connect();
+    state.walletName = wallet.name;
+    state.publicKey = response.publicKey?.toString() || provider.publicKey?.toString() || "";
+    document.querySelector("#wallet-modal")?.classList.remove("open");
+    renderWallet();
+  } catch (error) {
+    pushActivity("Wallet connection rejected", "Connect request was cancelled or failed.");
+  }
+}
+
+function renderWallet() {
+  document.querySelectorAll("[data-wallet-connect]").forEach((button) => {
+    button.textContent = state.publicKey ? `${state.walletName}: ${short(state.publicKey)}` : "Connect wallet";
   });
   document.querySelectorAll("[data-wallet-full]").forEach((node) => {
-    node.textContent = pubkey || "Not connected";
+    node.textContent = state.publicKey || "Connect a wallet to continue";
   });
   document.querySelectorAll("[data-wallet-state]").forEach((node) => {
-    node.textContent = "Wallet connected";
-    node.classList.add("verified");
+    node.textContent = state.publicKey ? "Wallet connected" : "Wallet required";
+    node.className = `status-pill ${state.publicKey ? "good" : "warn"}`;
   });
 }
 
 async function hydrateDeployment() {
-  const deployment = await loadDeployment();
-  const statusNodes = document.querySelectorAll("[data-deployment-status]");
-  const programNodes = document.querySelectorAll("[data-program-id]");
-  const txNodes = document.querySelectorAll("[data-deploy-tx]");
-  if (!deployment) {
-    statusNodes.forEach((node) => {
-      node.textContent = "No verified contract metadata";
-      node.classList.add("warning");
-    });
-    return;
+  try {
+    const response = await fetch("/app/deployment.json", { cache: "no-store" });
+    if (response.ok) state.deployment = await response.json();
+  } catch {
+    state.deployment = null;
   }
-  statusNodes.forEach((node) => {
-    node.textContent = `Deployed on ${deployment.cluster}`;
-    node.classList.add("verified");
+
+  const hasDeployment = Boolean(state.deployment?.programId);
+  document.querySelectorAll("[data-contract-state]").forEach((node) => {
+    node.textContent = hasDeployment ? "Devnet contract configured" : "Contract deployment required";
+    node.className = `status-pill ${hasDeployment ? "good" : "warn"}`;
   });
-  programNodes.forEach((node) => {
-    node.innerHTML = `<a href="${explorerAddress(
-      deployment.programId,
-      deployment.cluster
-    )}" target="_blank" rel="noreferrer">${deployment.programId}</a>`;
+  document.querySelectorAll("[data-program-id]").forEach((node) => {
+    node.textContent = state.deployment?.programId || "Not configured";
   });
-  txNodes.forEach((node) => {
-    node.innerHTML = `<a href="${explorerTx(
-      deployment.programDeploySignature,
-      deployment.cluster
-    )}" target="_blank" rel="noreferrer">${short(
-      deployment.programDeploySignature
-    )}</a>`;
+  document.querySelectorAll("[data-deploy-tx]").forEach((node) => {
+    const sig = state.deployment?.programDeploySignature || "";
+    node.innerHTML = sig
+      ? `<a href="${explorerTx(sig)}" target="_blank" rel="noreferrer">${short(sig)}</a>`
+      : "Not available";
   });
-  const verifyNodes = document.querySelectorAll("[data-program-verified]");
-  if (verifyNodes.length) {
-    try {
-      const result = await verifyProgram(
-        deployment.programId,
-        deployment.cluster
-      );
-      verifyNodes.forEach((node) => {
-        node.textContent = result.ok
-          ? `Explorer verified. Owner: ${short(result.owner)}. Lamports: ${
-              result.lamports
-            }`
-          : "Program account was not found by RPC.";
-        node.classList.toggle("verified", result.ok);
-      });
-    } catch {
-      verifyNodes.forEach((node) => {
-        node.textContent =
-          "RPC verification was rate-limited. Use the explorer link.";
-        node.classList.add("warning");
-      });
-    }
-  }
+  document.querySelectorAll("[data-submit-action]").forEach((button) => {
+    button.disabled = !hasDeployment;
+    if (!hasDeployment) button.textContent = "Deploy contract first";
+  });
 }
 
-document
-  .querySelectorAll("[data-wallet-connect]")
-  .forEach((button) => button.addEventListener("click", connectWallet));
-hydrateDeployment();
+function bindProofPanels() {
+  document.querySelectorAll("[data-proof-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      button.closest(".proof-panel")?.classList.toggle("open");
+    });
+  });
+}
+
+function bindDemoForms() {
+  document.querySelectorAll("[data-action-form]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!state.publicKey) {
+        openWalletModal();
+        return;
+      }
+      if (!state.deployment?.programId) {
+        pushActivity("Deployment missing", "This function needs a deployed Arcium program before it can submit.");
+        return;
+      }
+      const action = form.getAttribute("data-action-form") || "Action";
+      pushActivity(`${action} prepared`, "Wallet is connected. Transaction wiring is ready for the deployed instruction client.");
+    });
+  });
+}
+
+function pushActivity(title, detail) {
+  const feed = document.querySelector("[data-activity]");
+  if (!feed) return;
+  const item = document.createElement("article");
+  item.className = "activity-item";
+  item.innerHTML = `<strong>${escapeHtml(title)}</strong><p>${escapeHtml(detail)}</p>`;
+  feed.prepend(item);
+}
+
+function explorerTx(signature) {
+  return `https://explorer.solana.com/tx/${signature}?cluster=${CLUSTER}`;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[char]);
+}

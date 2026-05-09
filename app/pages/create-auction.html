@@ -1,4 +1,38 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Create Auction</title><link rel="icon" href="/app/favicon.svg" type="image/svg+xml"/><link rel="stylesheet" href="/app/site.css"/><script src="/app/wallet.js" defer></script></head>
-<body><main class="shell"><nav class="nav"><a class="brand" href="/app"><span class="brand-mark">A</span><span>Create Auction</span></a><div class="links"><a href="/app/how-it-works.html">How it works</a><a href="/app/pages/submit-bid.html">Submit bid</a><button class="wallet-button" data-wallet-connect>Connect wallet</button></div></nav>
-<section class="layout"><form class="panel form-grid"><label>Auction title<input placeholder="Treasury NFT sale"/></label><label>Asset<input placeholder="Mint or lot identifier"/></label><label>Mode<select><option>First-price sealed bid</option><option>Vickrey second price</option><option>Uniform price</option></select></label><label>Reserve<input type="number" min="0" step="0.01" placeholder="10"/></label><label class="wide">Seller wallet<output data-wallet-full>Connect wallet to use your address</output></label><button class="wide" type="button" data-wallet-connect>Connect wallet before creating</button></form><aside class="panel status"><h2>Verified contract</h2><dl class="kv"><div><dt>Status</dt><dd data-deployment-status>Checking...</dd></div><div><dt>Program</dt><dd data-program-id>Checking...</dd></div><div><dt>Deploy tx</dt><dd data-deploy-tx>Checking...</dd></div></dl><p data-program-verified>Checking explorer-verifiable program account...</p></aside></section></main></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create Auction</title>
+    <link rel="icon" href="/app/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/app/site.css" />
+    <script src="/app/wallet.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/app"><span class="brand-mark">A</span><span>Create Auction</span></a>
+        <nav class="nav-links"><a href="/app/how-it-works.html">How it works</a><a href="/app/pages/submit-bid.html">Bid</a><a href="/app/pages/close-auction.html">Close</a><button class="wallet-trigger" type="button" data-wallet-connect>Connect wallet</button></nav>
+      </header>
+      <section class="page-head"><p class="eyebrow">Function 01</p><h1>Create sealed auction terms.</h1><p class="lede">Set public auction rules. Private bids are submitted later from bidder wallets.</p></section>
+      <section class="layout">
+        <form class="panel form-grid" data-action-form="Create auction">
+          <label>Auction title<input required placeholder="Treasury NFT sale" /></label>
+          <label>Asset mint<input required placeholder="Solana mint address" /></label>
+          <label>Payment mint<input required placeholder="USDC mint address" /></label>
+          <label>Mode<select><option>First-price sealed bid</option><option>Vickrey second price</option><option>Uniform price</option></select></label>
+          <label>Reserve floor<input required type="number" min="0" step="0.01" placeholder="10" /></label>
+          <label>Supply<input required type="number" min="1" value="1" /></label>
+          <label class="wide">Seller wallet<output data-wallet-full>Connect a wallet to continue</output></label>
+          <div class="page-actions wide"><button class="action" type="submit" data-submit-action>Create auction</button><span data-wallet-state class="status-pill warn">Wallet required</span></div>
+        </form>
+        <aside class="panel proof-panel">
+          <p class="eyebrow">Proofs</p><h2>Hidden by default</h2><p>No raw deployment data is shown in the main workflow. Open this only when you want explorer verification.</p>
+          <button class="proof-toggle" type="button" data-proof-toggle>Show technical details</button>
+          <div class="proof-body"><dl class="kv"><div><dt>Status</dt><dd data-contract-state>Checking</dd></div><div><dt>Program</dt><dd data-program-id>Checking</dd></div><div><dt>Deploy tx</dt><dd data-deploy-tx>Checking</dd></div></dl></div>
+          <div class="activity" data-activity></div>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
