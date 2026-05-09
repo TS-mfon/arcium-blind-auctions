@@ -24,14 +24,9 @@
           <label>Reserve floor<input required type="number" min="0" step="0.01" placeholder="10" /></label>
           <label>Supply<input required type="number" min="1" value="1" /></label>
           <label class="wide">Seller wallet<output data-wallet-full>Connect a wallet to continue</output></label>
-          <div class="page-actions wide"><button class="action" type="submit" data-submit-action>Create auction</button><span data-wallet-state class="status-pill warn">Wallet required</span></div>
+          <div class="page-actions wide"><button class="action" type="submit" data-submit-action>Create auction</button></div>
         </form>
-        <aside class="panel proof-panel">
-          <p class="eyebrow">Proofs</p><h2>Hidden by default</h2><p>No raw deployment data is shown in the main workflow. Open this only when you want explorer verification.</p>
-          <button class="proof-toggle" type="button" data-proof-toggle>Show technical details</button>
-          <div class="proof-body"><dl class="kv"><div><dt>Status</dt><dd data-contract-state>Checking</dd></div><div><dt>Program</dt><dd data-program-id>Checking</dd></div><div><dt>Deploy tx</dt><dd data-deploy-tx>Checking</dd></div></dl></div>
-          <div class="activity" data-activity></div>
-        </aside>
+        
       </section>
     </main>
   </body>

@@ -11,7 +11,7 @@
   <body>
     <main class="shell">
       <header class="topbar"><a class="brand" href="/app"><span class="brand-mark">B</span><span>Submit Bid</span></a><nav class="nav-links"><a href="/app/pages/create-auction.html">Create</a><a href="/app/pages/close-auction.html">Close</a><button class="wallet-trigger" type="button" data-wallet-connect>Connect wallet</button></nav></header>
-      <section class="page-head"><p class="eyebrow">Function 02</p><h1>Prepare a confidential bid.</h1><p class="lede">Bid value and quantity are treated as private inputs. The page does not publish a fake bid state.</p></section>
+      <section class="page-head"><p class="eyebrow">Function 02</p><h1>Submit a confidential bid.</h1><p class="lede">Bid value and quantity are treated as private inputs. The page does not publish a fake bid state.</p></section>
       <section class="layout">
         <form class="panel form-grid" data-action-form="Submit sealed bid">
           <label class="wide">Auction account<input required placeholder="Auction PDA or account" /></label>
@@ -19,9 +19,9 @@
           <label>Quantity<input required type="number" min="1" value="1" /></label>
           <label class="wide">Private nonce<input placeholder="Optional local salt" /></label>
           <label class="wide">Bidder wallet<output data-wallet-full>Connect a wallet to continue</output></label>
-          <div class="page-actions wide"><button class="action" type="submit" data-submit-action>Prepare encrypted bid</button><span data-wallet-state class="status-pill warn">Wallet required</span></div>
+          <div class="page-actions wide"><button class="action" type="submit" data-submit-action>Submit encrypted bid</button></div>
         </form>
-        <aside class="panel proof-panel"><p class="eyebrow">Activity</p><h2>Bid privacy first</h2><p>Only final auction output should be publicly shown after settlement.</p><button class="proof-toggle" type="button" data-proof-toggle>Show technical details</button><div class="proof-body"><dl class="kv"><div><dt>Status</dt><dd data-contract-state>Checking</dd></div><div><dt>Program</dt><dd data-program-id>Checking</dd></div></dl></div><div class="activity" data-activity></div></aside>
+        
       </section>
     </main>
   </body>
