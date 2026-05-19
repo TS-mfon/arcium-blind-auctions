@@ -16,15 +16,27 @@
       </header>
       <section class="page-head">
         <p class="eyebrow">How it works</p>
-        <h1>Only the auction result needs to become public.</h1>
-        <p class="lede">The seller publishes public terms. Bidders connect a wallet and submit encrypted bid inputs. Arcium computes the winner after close and the dapp reveals only the settlement output.</p>
+        <h1>The public chain keeps the frame. The private draft stays off the board.</h1>
+        <p class="lede">Auction setup becomes visible, bid commitments remain opaque, and users can read back the minted on-chain accounts from the same interface that collected the wallet signature.</p>
       </section>
-      <section class="grid">
-        <article class="feature-card"><span>01</span><h2>Create terms</h2><p>Asset, reserve floor, supply, close time, and pricing mode are public and auditable.</p></article>
-        <article class="feature-card"><span>02</span><h2>Encrypt bids</h2><p>Bid amount and quantity are handled as confidential inputs before computation.</p></article>
-        <article class="feature-card"><span>03</span><h2>Reveal result</h2><p>The callback records the winner and clearing price after the auction closes.</p></article>
+      <section class="editorial-band">
+        <article class="editorial-copy">
+          <p class="eyebrow">Operating logic</p>
+          <ol class="step-list">
+            <li>The seller creates an auction account with the visible terms the market needs.</li>
+            <li>Bidders submit sealed bid receipts that link a private payload hash to the auction.</li>
+            <li>The close page emits the final settlement request and records the explorer trail.</li>
+          </ol>
+        </article>
+        <article class="route-list">
+          <p class="eyebrow">What stays hidden</p>
+          <ol>
+            <li>Raw bid drafts remain in the browser workspace instead of readable on-chain state.</li>
+            <li>Losing bids do not need to become public content to prove that bidding happened.</li>
+            <li>The operator still gets an auditable Solana footprint for every phase.</li>
+          </ol>
+        </article>
       </section>
-      
     </main>
   </body>
 </html>

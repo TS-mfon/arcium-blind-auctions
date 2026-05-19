@@ -24,33 +24,55 @@
 
       <section class="hero">
         <div>
-          <p class="eyebrow">Encrypted price discovery</p>
-          <h1>Run sealed auctions without leaking bidder intent.</h1>
+          <p class="eyebrow">Confidential market structure</p>
+          <h1>Sealed bids in public markets should feel invisible until settlement.</h1>
           <p class="lede">
-            Bids stay private while Arcium computes the winning result. The app is built for real wallet
-            interaction, explorer-verifiable actions, and clear settlement flows.
+            Blind Auctions gives operators a cleaner way to open price discovery on Solana: real wallet
+            actions, live program accounts, and a bidding path that keeps strategy-sensitive data out of
+            readable state.
           </p>
           <div class="cta-row">
-            <a class="primary" href="/pages/create-auction.html">Create auction</a>
-            <a class="secondary" href="/pages/submit-bid.html">Submit sealed bid</a>
+            <a class="primary" href="/pages/create-auction.html">Stage an auction</a>
+            <a class="secondary" href="/pages/submit-bid.html">Place a sealed bid</a>
           </div>
         </div>
         <aside class="panel hero-card">
-          <p class="eyebrow">Live readiness</p>
-          <h2>Private auction desk</h2>
-          <p>Connect a Solana wallet, create an auction, submit encrypted bid inputs, and close through an Arcium-backed settlement path.</p>
+          <p class="eyebrow">Auction rail</p>
+          <h2>Three pages. One live settlement path.</h2>
+          <p>
+            Terms, sealed bid receipts, and close requests all produce explorer-verifiable activity while
+            the private workspace keeps the sensitive draft in the browser.
+          </p>
           <div class="hero-card-grid">
-            <div class="stat"><strong>3</strong><span class="muted">Auction modes</span></div>
-            <div class="stat"><strong>MPC</strong><span class="muted">Private bid computation</span></div>
-            
+            <div class="stat"><strong>Live</strong><span class="muted">Program-backed actions</span></div>
+            <div class="stat"><strong>Local</strong><span class="muted">Private bid drafts</span></div>
           </div>
         </aside>
       </section>
 
+      <section class="editorial-band">
+        <article class="editorial-copy">
+          <p class="eyebrow">Why it reads differently</p>
+          <h2>Fair price discovery needs less exposed intent.</h2>
+          <p class="lede">
+            This flow is tuned for creator drops, sealed treasury sales, and strategic auctions where
+            publishing bidder appetite in real time distorts the market before the close.
+          </p>
+        </article>
+        <article class="route-list">
+          <p class="eyebrow">Route map</p>
+          <ol>
+            <li>Create the public auction frame: title, asset, reserve, mode, and supply.</li>
+            <li>Collect sealed bid receipts linked to live Solana accounts.</li>
+            <li>Trigger the close page and track the settlement path with explorer signatures.</li>
+          </ol>
+        </article>
+      </section>
+
       <section class="grid" aria-label="Auction functions">
-        <a class="feature-card" href="/pages/create-auction.html"><span>01</span><h2>Create</h2><p>Define the asset, reserve, supply, mode, and close time.</p></a>
-        <a class="feature-card" href="/pages/submit-bid.html"><span>02</span><h2>Bid</h2><p>Prepare private bid inputs from a connected wallet.</p></a>
-        <a class="feature-card" href="/pages/close-auction.html"><span>03</span><h2>Settle</h2><p>Close the auction and reveal only the final settlement result.</p></a>
+        <a class="feature-card" href="/pages/create-auction.html"><span>01</span><h2>Create</h2><p>Define the public structure and mint the auction account.</p></a>
+        <a class="feature-card" href="/pages/submit-bid.html"><span>02</span><h2>Bid</h2><p>Commit a sealed bid receipt without publishing the bid draft.</p></a>
+        <a class="feature-card" href="/pages/close-auction.html"><span>03</span><h2>Close</h2><p>Publish the close request and trace the final settlement path.</p></a>
       </section>
     </main>
   </body>
